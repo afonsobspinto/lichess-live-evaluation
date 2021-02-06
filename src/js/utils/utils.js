@@ -20,3 +20,7 @@ const observeDOM = (function () {
         }
     }
 })();
+
+function highlightElement(element){
+    console.log("HighlightElement")
+}

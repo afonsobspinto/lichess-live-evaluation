@@ -24,3 +24,8 @@ const observeDOM = (function () {
 function highlightElement(element){
     console.log("HighlightElement")
 }
+
+function displayExtensionGame(chessboard){
+    console.log(chessboard.ascii())
+    console.log(chessboard.turn())
+}

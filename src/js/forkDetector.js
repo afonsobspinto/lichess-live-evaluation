@@ -3,6 +3,7 @@ function forkDetector(mutations) {
         console.log("new player")
         let currentBoard = getBoard()
         setTurn(mutations, currentBoard)
+        displayExtensionGame(currentBoard)
         let forkOriginPieces = forkDetectorAux(currentBoard)
         for (let piecePosition of forkOriginPieces) {
             highlightElement(getElementGivenPosition(piecePosition))
@@ -11,7 +12,12 @@ function forkDetector(mutations) {
 }
 
 function setTurn(mutations, currentBoard) {
-    console.log(currentBoard.ascii())
+    let turn = player1Played(mutations) ?  getPlayer2Color() : getPlayer1Color()
+    currentBoard.setTurn(turn)
+}
+
+function player1Played(mutations){
+    return mutations.length === 3
 }
 
 function hasPlayerChanged(mutations) {
@@ -22,23 +28,22 @@ function getBoard() {
     const chessboard = new Chess()
     chessboard.clear()
     const board = document.getElementsByTagName(BOARD_ELEMENT_TAG)[0]
-    const lastMoveData = {
-        'lastMove': null,
-        'piece': null
-    }
+    let lastMove = null
+    let lastMovePiece = null
     const boardWidth = getBoardWidth(board)
     for (let child of board.children) {
         let type = child.className.split(' ').length
         if (type === ELEMENTS_ENUM.piece) {
             chessboard.put(getChessPiece(child), getPiecePosition(child, boardWidth))
         } else if (type === ELEMENTS_ENUM.movedPiece) {
-            lastMoveData['piece'] = child
+            lastMovePiece = child
         }
-        else if(type === ELEMENTS_ENUM.lastMove && lastMoveData['lastMove'] == null){
-            lastMoveData['lastMove'] = (child)
+        else if(type === ELEMENTS_ENUM.lastMove && lastMove == null){
+            lastMove = child
         }
     }
-    chessboard.put(getChessPiece(lastMoveData['piece']), getPiecePosition(lastMoveData['lastMove'], boardWidth))
+    let lastMoveChessPiece = lastMovePiece != null ? getChessPiece(lastMovePiece) : getLastMoveChessPiece()
+    chessboard.put(lastMoveChessPiece, getPiecePosition(lastMove, boardWidth))
 
     return chessboard
 }
@@ -48,8 +53,11 @@ function forkDetectorAux(currentBoard) {
     return []
 }
 
-function isPiece(element) {
-    return element.tagName === PIECE_ELEMENT_TAG
+
+function getLastMoveChessPiece(){
+    const ghostPiece = document.getElementsByClassName(GHOST_PIECE)[0]
+    let pieceClassName = ghostPiece.className.split(' ')
+    return PIECE_MAPPER[pieceClassName[1]+pieceClassName[2]]
 }
 
 function getChessPiece(piece) {
@@ -97,4 +105,16 @@ function rowsMapper(index) {
 
 function getOrientation() {
     return document.getElementsByClassName(ORIENTATION_CLASS)[0].className.split(' ')[1].split('-')[1]
+}
+
+function getPlayer1Color(){
+    return shorthandColor(getOrientation())
+}
+
+function getPlayer2Color(){
+    return getPlayer1Color() === shorthandColor(BLACK) ? shorthandColor(WHITE) : shorthandColor(BLACK)
+}
+
+function shorthandColor(color){
+    return color[0]
 }

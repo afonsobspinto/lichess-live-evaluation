@@ -10,8 +10,8 @@ function forkDetector(mutations) {
     }
 }
 
-function setTurn(mutations, currentBoard){
-    console.log(currentBoard)
+function setTurn(mutations, currentBoard) {
+    console.log(currentBoard.ascii())
 }
 
 function hasPlayerChanged(mutations) {
@@ -22,13 +22,27 @@ function getBoard() {
     const chessboard = new Chess()
     chessboard.clear()
     const board = document.getElementsByTagName(BOARD_ELEMENT_TAG)[0]
+    const lastMoveData = {
+        'lastMove': null,
+        'piece': null
+    }
+    const boardWidth = getBoardWidth(board)
     for (let child of board.children) {
-        if (isPiece(child)) {
-            chessboard.put(getChessPiece(child), getPiecePosition(child, getBoardWidth(board)))
+        let type = child.className.split(' ').length
+        if (type === ELEMENTS_ENUM.piece) {
+            chessboard.put(getChessPiece(child), getPiecePosition(child, boardWidth))
+        } else if (type === ELEMENTS_ENUM.movedPiece) {
+            lastMoveData['piece'] = child
+        }
+        else if(type === ELEMENTS_ENUM.lastMove && lastMoveData['lastMove'] == null){
+            lastMoveData['lastMove'] = (child)
         }
     }
+    chessboard.put(getChessPiece(lastMoveData['piece']), getPiecePosition(lastMoveData['lastMove'], boardWidth))
+
     return chessboard
 }
+
 
 function forkDetectorAux(currentBoard) {
     return []
@@ -41,6 +55,7 @@ function isPiece(element) {
 function getChessPiece(piece) {
     let pieceClassName = piece.className.split(' ')
     return PIECE_MAPPER[pieceClassName[0]+pieceClassName[1]]
+
 }
 
 function getPiecePosition(piece, width) {
@@ -73,13 +88,13 @@ function getElementGivenPosition(position) {
 
 function colsMapper(index) {
     index = getOrientation() === BLACK ? ROWS - 1 - Math.round(index) : Math.round(index)
-    return  String.fromCharCode('a'.charCodeAt(0) + index)
+    return String.fromCharCode('a'.charCodeAt(0) + index)
 }
 
 function rowsMapper(index) {
-    return getOrientation() === BLACK ? Math.round(index) + 1 : ROWS-Math.round(index)
+    return getOrientation() === BLACK ? Math.round(index) + 1 : ROWS - Math.round(index)
 }
 
-function getOrientation(){
+function getOrientation() {
     return document.getElementsByClassName(ORIENTATION_CLASS)[0].className.split(' ')[1].split('-')[1]
 }

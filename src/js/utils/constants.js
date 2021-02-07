@@ -19,3 +19,4 @@ const PIECE_MAPPER = {
 }
 const ROWS = 8
 const BLACK = "black"
+const ELEMENTS_ENUM = Object.freeze({"lastMove":1, "piece":2, "movedPiece":3})

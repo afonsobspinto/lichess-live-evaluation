@@ -2,11 +2,16 @@ function forkDetector(mutations) {
     if (hasPlayerChanged(mutations)) {
         console.log("new player")
         let currentBoard = getBoard()
+        setTurn(mutations, currentBoard)
         let forkOriginPieces = forkDetectorAux(currentBoard)
         for (let piecePosition of forkOriginPieces) {
             highlightElement(getElementGivenPosition(piecePosition))
         }
     }
+}
+
+function setTurn(mutations, currentBoard){
+    console.log(currentBoard)
 }
 
 function hasPlayerChanged(mutations) {
@@ -67,10 +72,14 @@ function getElementGivenPosition(position) {
 }
 
 function colsMapper(index) {
-    return String.fromCharCode('a'.charCodeAt(0) + Math.round(index))
+    index = getOrientation() === BLACK ? ROWS - 1 - Math.round(index) : Math.round(index)
+    return  String.fromCharCode('a'.charCodeAt(0) + index)
 }
 
 function rowsMapper(index) {
-    index = Math.round(index)
-    return document.getElementsByClassName(ORIENTATION_CLASS)[0].className.split(' ')[1].split('-')[1] === BLACK ? index + 1 : ROWS-index
+    return getOrientation() === BLACK ? Math.round(index) + 1 : ROWS-Math.round(index)
+}
+
+function getOrientation(){
+    return document.getElementsByClassName(ORIENTATION_CLASS)[0].className.split(' ')[1].split('-')[1]
 }

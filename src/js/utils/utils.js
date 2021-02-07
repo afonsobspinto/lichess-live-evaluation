@@ -21,11 +21,21 @@ const observeDOM = (function () {
     }
 })();
 
-function highlightElement(element){
-    console.log("HighlightElement")
+function highlightElements(elements){
+    for (let e of elements){
+        highlightElement(e)
+    }
 }
 
-function displayExtensionGame(chessboard){
+function highlightElement(element){
+    element.style.backgroundcolor = 'blue'
+}
+
+function displayGame(chessboard){
     console.log(chessboard.ascii())
     console.log(chessboard.turn())
+}
+
+function distanceBetweenPoints(pointA, pointB){
+    return Math.sqrt(Math.pow(pointA[0]-pointB[0], 2) + Math.pow(pointA[1]-pointB[1], 2))
 }

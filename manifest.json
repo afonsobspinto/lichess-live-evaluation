@@ -1,13 +1,13 @@
 {
-  "name": "lichess-fork-detector",
+  "name": "lichess-live-evaluation",
   "version": "0.1",
-  "description": "Chrome extension for lichess to detect potential forks on live games",
+  "description": "Chrome extension for lichess to evaluate position on live games",
   "manifest_version": 2,
   "content_scripts": [
     {
       "matches": ["https://lichess.org/*"],
       "js": ["src/js/lib/chess.min.js", "src/js/utils/constants.js","src/js/utils/utils.js", "src/js/lichessBoard.js",
-        "src/js/forkDetector.js", "src/js/content.js"]
+        "src/js/content.js"]
     }
   ]
 }

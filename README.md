@@ -1,2 +1,2 @@
-# lichess-fork-detector
-Chrome extension for lichess to detect potential forks on live games
+# lichess-live-evaluation
+Chrome extension for lichess to evaluate position on live games

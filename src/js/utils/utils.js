@@ -21,15 +21,10 @@ const observeDOM = (function () {
     }
 })();
 
-function highlightElements(elements){
-    for (let e of elements){
-        highlightElement(e)
-    }
+function displayEvaluation(){
+    console.log("Evaluation")
 }
 
-function highlightElement(element){
-    element.style.backgroundcolor = 'blue'
-}
 
 function displayGame(chessboard){
     console.log(chessboard.ascii())

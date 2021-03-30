@@ -22,19 +22,3 @@ const ROWS = 8
 const BLACK = "black"
 const WHITE = "white"
 const ELEMENTS_ENUM = Object.freeze({"lastMove":1, "piece":2, "movedPiece":3})
-const PIECE_VALUE_MAPPER = {
-    'p': 1,
-    'n': 3,
-    'b': 3,
-    'r': 5,
-    'q': 9,
-    'k': 999,
-}
-const PIECE_SHORTNAME_MAPPER = {
-    'p': 'pawn',
-    'n': 'knight',
-    'b': 'bishop',
-    'r': 'rook',
-    'q': 'queen',
-    'k': 'king'
-}

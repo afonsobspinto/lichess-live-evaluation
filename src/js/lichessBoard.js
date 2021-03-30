@@ -1,6 +1,5 @@
 function getLichessBoard(mutations) {
     if (hasPlayerChanged(mutations)) {
-        console.log("new player")
         let currentBoard = getBoard()
         setTurn(mutations, currentBoard)
         displayGame(currentBoard)
@@ -84,15 +83,6 @@ function rowsMapper(index) {
     return getOrientation() === BLACK ? Math.round(index) + 1 : ROWS - Math.round(index)
 }
 
-function colsReverseMapper(letter) {
-    let index = letter.charCodeAt(0) - 'a'.charCodeAt(0)
-    return getOrientation() === BLACK ? index : ROWS - index
-}
-
-function rowsReverseMapper(index) {
-    return getOrientation() === BLACK ? index - 1 : ROWS - index
-}
-
 function getOrientation() {
     return document.getElementsByClassName(ORIENTATION_CLASS)[0].className.split(' ')[1].split('-')[1]
 }
@@ -107,28 +97,4 @@ function getPlayer2Color(){
 
 function shorthandColor(color){
     return color[0]
-}
-
-function completeColor(shorthandColor){
-    return shorthandColor === 'b' ? BLACK : WHITE
-}
-
-function getPieceElement(move){
-    let pieceClassName = completeColor(move['color']) + " " + PIECE_SHORTNAME_MAPPER[move['piece']]
-    let pieces = document.getElementsByClassName(pieceClassName)
-    let pixels = coordsToPixels(move['from'])
-    let piece = null
-    let distance = Math.max()
-    for (let p of pieces){
-        let d = distanceBetweenPoints(pixels, getPieceTransform(p))
-        if (d < distance){
-            piece = p
-        }
-    }
-    return piece
-}
-
-function coordsToPixels(coords){
-    let squareWidth = getBoardWidth(document.getElementsByTagName(BOARD_ELEMENT_TAG)[0]) / ROWS
-    return [squareWidth * colsReverseMapper(coords[0]), squareWidth * rowsReverseMapper(parseInt(coords[1], 10))]
 }

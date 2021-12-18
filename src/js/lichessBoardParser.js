@@ -1,9 +1,9 @@
-function getLichessBoard(mutations) {
+function getLichessGame(mutations) {
     if (hasPlayerChanged(mutations)) {
-        let currentBoard = getBoard()
-        setTurn(mutations, currentBoard)
-        displayGame(currentBoard)
-        return currentBoard
+        let currentGame = getGame()
+        setTurn(mutations, currentGame)
+        //displayGame(currentGame)
+        return currentGame
     }
 }
 
@@ -20,9 +20,9 @@ function hasPlayerChanged(mutations) {
     return mutations.some(elem => elem.target.className === CLOCK_MUTATION)
 }
 
-function getBoard() {
-    const chessboard = new Chess()
-    chessboard.clear()
+function getGame() {
+    const chessGame = new Chess()
+    chessGame.clear()
     const board = document.getElementsByTagName(BOARD_ELEMENT_TAG)[0]
     let lastMove = null
     let lastMovePiece = null
@@ -30,7 +30,7 @@ function getBoard() {
     for (let child of board.children) {
         let type = child.className.split(' ').length
         if (type === ELEMENTS_ENUM.piece) {
-            chessboard.put(getChessPiece(child), getPiecePosition(child, boardWidth))
+            chessGame.put(getChessPiece(child), getPiecePosition(child, boardWidth))
         } else if (type === ELEMENTS_ENUM.movedPiece) {
             lastMovePiece = child
         }
@@ -39,9 +39,9 @@ function getBoard() {
         }
     }
     let lastMoveChessPiece = lastMovePiece != null ? getChessPiece(lastMovePiece) : getLastMoveChessPiece()
-    chessboard.put(lastMoveChessPiece, getPiecePosition(lastMove, boardWidth))
+    chessGame.put(lastMoveChessPiece, getPiecePosition(lastMove, boardWidth))
 
-    return chessboard
+    return chessGame
 }
 
 function getLastMoveChessPiece(){

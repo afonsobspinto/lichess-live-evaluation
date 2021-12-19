@@ -100,12 +100,7 @@ function getLastMoveChessPiece() {
 
 function getChessPiece(piece) {
     let pieceClassName = piece.className.split(' ')
-    try {
-        return PIECE_MAPPER[pieceClassName[0] + " " + pieceClassName[1]]
-    } catch (e) {
-        console.log(e)
-    }
-
+    return PIECE_MAPPER[pieceClassName[0] + " " + pieceClassName[1]]
 }
 
 function getPiecePosition(piece, width) {

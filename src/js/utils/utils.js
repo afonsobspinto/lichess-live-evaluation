@@ -24,11 +24,27 @@ const observeDOM = (function () {
 
 
 function displayEvaluation(evaluation){
-    console.log("Evaluation:", evaluation)
+    const evBar = document.querySelector('#evBar')
+    const evaluationPercentage = evaluation > 50 ? 50 : evaluation < -50 ? -50 : evaluation
+    evBar.style.background = `linear-gradient(to top, white 0%, white ${50+evaluationPercentage}%, black  ${50+evaluationPercentage}%, black 100%)`
+    //console.log(evaluation)
 }
 
 
 function displayGame(game){
     console.log(game.ascii())
     console.log(game.turn())
+}
+
+function addEvaluationBar(){
+    const evBar = document.createElement('div')
+    evBar.setAttribute('id', 'evBar')
+    evBar.style.position = 'absolute'
+    evBar.style.width = '20px'
+    evBar.style.height = '775px'
+    evBar.style.marginLeft = '385px'
+    evBar.style.border = '1px solid slategrey'
+    evBar.style.background = 'linear-gradient(to top, white 0%, white 50%, black 50%, black 100%)'
+    const element = document.querySelector(BOARD_WRAPPER_ELEMENT_ID);
+    element.appendChild(evBar);
 }

@@ -49,6 +49,7 @@ function getGame() {
     } else {
         chessGame.put(movedChessPiece, getPiecePosition(movedTo, boardWidth))
     }
+    handlePromotion(chessGame)
 
     return chessGame
 }
@@ -72,6 +73,23 @@ function handleCastling(chessGame, movedRookCoords) {
         chessGame.put(PIECE_MAPPER['black rook'], 'd8')
     }
 
+}
+
+function handlePromotion(chessGame){
+    for(let i = "a".charCodeAt(0); i <= "h".charCodeAt(0); i++){
+        const char = String.fromCharCode(i);
+
+        const coordWhite = char+'8'
+        const pieceWhite = chessGame.get(coordWhite)
+        if(pieceWhite && pieceWhite.type === 'p'){
+            chessGame.put(PIECE_MAPPER['white queen'], coordWhite)
+        }
+        const coordBlack = char+'1'
+        const pieceBlack = chessGame.get(coordBlack)
+        if(pieceBlack && pieceBlack.type === 'p'){
+            chessGame.put(PIECE_MAPPER['black queen'], coordBlack)
+        }
+    }
 }
 
 function getLastMoveChessPiece() {

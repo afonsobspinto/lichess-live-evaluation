@@ -1,4 +1,5 @@
-const CLOCK_MUTATION = "rclock rclock-turn rclock-top"
+const CLOCK_MUTATION_1 = "rclock rclock-turn rclock-top"
+const CLOCK_MUTATION_2 = "time"
 const BOARD_WRAPPER_ELEMENT_ID = "#main-wrap .round"
 const BOARD_ELEMENT_TAG = "cg-board"
 const ORIENTATION_CLASS = "cg-wrap"

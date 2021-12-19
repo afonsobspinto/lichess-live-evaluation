@@ -17,7 +17,8 @@ function blackPlayed(mutations) {
 }
 
 function hasPlayerChanged(mutations) {
-    return mutations.some(elem => elem.target.className === CLOCK_MUTATION)
+    return mutations.filter(elem => elem.target.className === CLOCK_MUTATION_2).length === 2 && mutations.length > 2 &&
+        mutations.filter(elem => elem.target.localName === "strong").length === 0
 }
 
 function getGame() {
@@ -132,16 +133,4 @@ function rowsMapper(index) {
 
 function getOrientation() {
     return document.getElementsByClassName(ORIENTATION_CLASS)[0].className.split(' ')[1].split('-')[1]
-}
-
-function getPlayer1Color() {
-    return shorthandColor(getOrientation())
-}
-
-function getPlayer2Color() {
-    return getPlayer1Color() === shorthandColor(BLACK) ? shorthandColor(WHITE) : shorthandColor(BLACK)
-}
-
-function shorthandColor(color) {
-    return color[0]
 }

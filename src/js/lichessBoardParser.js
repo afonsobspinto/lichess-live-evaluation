@@ -8,11 +8,11 @@ function getLichessGame(mutations) {
 }
 
 function setNextTurn(mutations, currentBoard) {
-    let nextTurn = blackPlayed(mutations) ?  'w' : 'b'
+    let nextTurn = blackPlayed(mutations) ? 'w' : 'b'
     currentBoard.setTurn(nextTurn)
 }
 
-function blackPlayed(mutations){
+function blackPlayed(mutations) {
     return mutations.length === 3 || mutations.length === 5
 }
 
@@ -28,59 +28,65 @@ function getGame() {
     let movedPiece = null
     const boardWidth = getBoardWidth(board)
     for (let child of board.children) {
-        let type = child.className.split(' ').length
-        if (type === ELEMENTS_ENUM.piece) {
+        let type = child.className.split(' ')
+        if (type.length === ELEMENTS_ENUM.piece) {
+            if (type.includes('current-premove') || type.includes('premove-dest')) {
+                continue
+            }
             chessGame.put(getChessPiece(child), getPiecePosition(child, boardWidth))
-        } else if (type === ELEMENTS_ENUM.movedPiece) {
+
+        }
+        if (type.includes('anim')) {
             movedPiece = child
         }
-        else if(type === ELEMENTS_ENUM.lastMove && movedTo == null){
+        if (type.includes('last-move') && movedTo == null) {
             movedTo = child
         }
     }
     let movedChessPiece = movedPiece != null ? getChessPiece(movedPiece) : getLastMoveChessPiece()
-    if(isCastling(board)){
+    if (isCastling(board)) {
         handleCastling(chessGame, getPiecePosition(Array.from(board.children).filter(p => p.className.includes('rook anim'))[0], boardWidth))
-    }else{
+    } else {
         chessGame.put(movedChessPiece, getPiecePosition(movedTo, boardWidth))
     }
 
     return chessGame
 }
 
-function isCastling(board){
+function isCastling(board) {
     return Array.from(board.children).filter(p => p.className.includes('anim')).length === 2
 }
 
-function handleCastling(chessGame, movedRookCoords){
-    if(movedRookCoords === 'h1'){
+function handleCastling(chessGame, movedRookCoords) {
+    if (movedRookCoords === 'h1') {
         chessGame.put(PIECE_MAPPER['white king'], 'g1')
         chessGame.put(PIECE_MAPPER['white rook'], 'f1')
-    }
-    else if(movedRookCoords === 'a1'){
+    } else if (movedRookCoords === 'a1') {
         chessGame.put(PIECE_MAPPER['white king'], 'c1')
         chessGame.put(PIECE_MAPPER['white rook'], 'd1')
-    }
-    else if(movedRookCoords === 'h8'){
+    } else if (movedRookCoords === 'h8') {
         chessGame.put(PIECE_MAPPER['black king'], 'g8')
         chessGame.put(PIECE_MAPPER['black rook'], 'f8')
-    }
-    else if(movedRookCoords === 'a8'){
+    } else if (movedRookCoords === 'a8') {
         chessGame.put(PIECE_MAPPER['black king'], 'c8')
         chessGame.put(PIECE_MAPPER['black rook'], 'd8')
     }
 
 }
 
-function getLastMoveChessPiece(){
+function getLastMoveChessPiece() {
     const ghostPiece = document.getElementsByClassName(GHOST_PIECE)[0]
     let pieceClassName = ghostPiece.className.split(' ')
-    return PIECE_MAPPER[pieceClassName[1]+" "+pieceClassName[2]]
+    return PIECE_MAPPER[pieceClassName[1] + " " + pieceClassName[2]]
 }
 
 function getChessPiece(piece) {
     let pieceClassName = piece.className.split(' ')
-    return PIECE_MAPPER[pieceClassName[0]+" "+pieceClassName[1]]
+    try {
+        return PIECE_MAPPER[pieceClassName[0] + " " + pieceClassName[1]]
+    } catch (e) {
+        console.log(e)
+    }
 
 }
 
@@ -115,14 +121,14 @@ function getOrientation() {
     return document.getElementsByClassName(ORIENTATION_CLASS)[0].className.split(' ')[1].split('-')[1]
 }
 
-function getPlayer1Color(){
+function getPlayer1Color() {
     return shorthandColor(getOrientation())
 }
 
-function getPlayer2Color(){
+function getPlayer2Color() {
     return getPlayer1Color() === shorthandColor(BLACK) ? shorthandColor(WHITE) : shorthandColor(BLACK)
 }
 
-function shorthandColor(color){
+function shorthandColor(color) {
     return color[0]
 }

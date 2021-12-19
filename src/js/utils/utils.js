@@ -28,7 +28,7 @@ function displayEvaluation(evaluation){
 }
 
 
-function displayGame(chessboard){
-    console.log(chessboard.ascii())
-    console.log(chessboard.turn())
+function displayGame(game){
+    console.log(game.ascii())
+    console.log(game.turn())
 }

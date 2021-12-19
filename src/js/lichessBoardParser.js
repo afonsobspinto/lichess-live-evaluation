@@ -8,11 +8,11 @@ function getLichessGame(mutations) {
 }
 
 function setTurn(mutations, currentBoard) {
-    let turn = player1Played(mutations) ?  getPlayer2Color() : getPlayer1Color()
+    let turn = player2Played(mutations) ?  getPlayer1Color() : getPlayer2Color()
     currentBoard.setTurn(turn)
 }
 
-function player1Played(mutations){
+function player2Played(mutations){
     return mutations.length === 3
 }
 

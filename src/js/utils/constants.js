@@ -22,3 +22,4 @@ const ROWS = 8
 const BLACK = "black"
 const WHITE = "white"
 const ELEMENTS_ENUM = Object.freeze({"lastMove":1, "piece":2, "movedPiece":3})
+const DEPTH = 15

@@ -4,7 +4,6 @@ stockfish.onmessage = (event) => {
 };
 
 function onMessage(event, turn) {
-    console.log(event)
     const evaluation = getEvaluation(event, turn)
     if (evaluation) {
         displayEvaluation(evaluation)
@@ -18,7 +17,7 @@ function triggerEvaluation(game) {
     stockfish.postMessage("ucinewgame");
     stockfish.postMessage("isready");
     stockfish.postMessage("position fen " + game.fen());
-    stockfish.postMessage("go depth 15")
+    stockfish.postMessage(`go depth ${DEPTH.toString()}`);
 
 }
 
@@ -26,7 +25,7 @@ function getEvaluation(event, turn) {
     if (event.startsWith("info depth")) {
         const message = event.split(" ")
         const depth = parseInt(message[message.indexOf("depth") + 1])
-        if (depth === 15) {
+        if (depth === DEPTH) {
             return getEvaluationAux(message, turn)
         }
     }
@@ -34,7 +33,10 @@ function getEvaluation(event, turn) {
 
 function getEvaluationAux(message, turn) {
     if (message.includes('mate')) {
-        return applyTurn(1000, turn)
+        const moves = parseInt(message[message.indexOf("mate") + 1])
+        if (moves !== 0) {
+            return applyTurn(15000 / moves, turn)
+        }
     } else {
         const value = parseInt(message[message.indexOf("cp") + 1]) / 100
         return applyTurn(value, turn)

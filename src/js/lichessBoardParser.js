@@ -1,19 +1,19 @@
 function getLichessGame(mutations) {
     if (hasPlayerChanged(mutations)) {
         let currentGame = getGame()
-        setTurn(mutations, currentGame)
+        setNextTurn(mutations, currentGame)
         //displayGame(currentGame)
         return currentGame
     }
 }
 
-function setTurn(mutations, currentBoard) {
-    let turn = player2Played(mutations) ?  getPlayer1Color() : getPlayer2Color()
-    currentBoard.setTurn(turn)
+function setNextTurn(mutations, currentBoard) {
+    let nextTurn = blackPlayed(mutations) ?  'w' : 'b'
+    currentBoard.setTurn(nextTurn)
 }
 
-function player2Played(mutations){
-    return mutations.length === 3
+function blackPlayed(mutations){
+    return mutations.length === 3 || mutations.length === 5
 }
 
 function hasPlayerChanged(mutations) {
@@ -24,24 +24,52 @@ function getGame() {
     const chessGame = new Chess()
     chessGame.clear()
     const board = document.getElementsByTagName(BOARD_ELEMENT_TAG)[0]
-    let lastMove = null
-    let lastMovePiece = null
+    let movedTo = null
+    let movedPiece = null
     const boardWidth = getBoardWidth(board)
     for (let child of board.children) {
         let type = child.className.split(' ').length
         if (type === ELEMENTS_ENUM.piece) {
             chessGame.put(getChessPiece(child), getPiecePosition(child, boardWidth))
         } else if (type === ELEMENTS_ENUM.movedPiece) {
-            lastMovePiece = child
+            movedPiece = child
         }
-        else if(type === ELEMENTS_ENUM.lastMove && lastMove == null){
-            lastMove = child
+        else if(type === ELEMENTS_ENUM.lastMove && movedTo == null){
+            movedTo = child
         }
     }
-    let lastMoveChessPiece = lastMovePiece != null ? getChessPiece(lastMovePiece) : getLastMoveChessPiece()
-    chessGame.put(lastMoveChessPiece, getPiecePosition(lastMove, boardWidth))
+    let movedChessPiece = movedPiece != null ? getChessPiece(movedPiece) : getLastMoveChessPiece()
+    if(isCastling(board)){
+        handleCastling(chessGame, getPiecePosition(Array.from(board.children).filter(p => p.className.includes('rook anim'))[0], boardWidth))
+    }else{
+        chessGame.put(movedChessPiece, getPiecePosition(movedTo, boardWidth))
+    }
 
     return chessGame
+}
+
+function isCastling(board){
+    return Array.from(board.children).filter(p => p.className.includes('anim')).length === 2
+}
+
+function handleCastling(chessGame, movedRookCoords){
+    if(movedRookCoords === 'h1'){
+        chessGame.put(PIECE_MAPPER['white king'], 'g1')
+        chessGame.put(PIECE_MAPPER['white rook'], 'f1')
+    }
+    else if(movedRookCoords === 'a1'){
+        chessGame.put(PIECE_MAPPER['white king'], 'c1')
+        chessGame.put(PIECE_MAPPER['white rook'], 'd1')
+    }
+    else if(movedRookCoords === 'h8'){
+        chessGame.put(PIECE_MAPPER['black king'], 'g8')
+        chessGame.put(PIECE_MAPPER['black rook'], 'f8')
+    }
+    else if(movedRookCoords === 'a8'){
+        chessGame.put(PIECE_MAPPER['black king'], 'c8')
+        chessGame.put(PIECE_MAPPER['black rook'], 'd8')
+    }
+
 }
 
 function getLastMoveChessPiece(){

@@ -26,6 +26,8 @@ function getEvaluation(event, turn) {
         const message = event.split(" ")
         const depth = parseInt(message[message.indexOf("depth") + 1])
         if (depth === DEPTH) {
+            console.log(event)
+            console.log(turn)
             return getEvaluationAux(message, turn)
         }
     }
